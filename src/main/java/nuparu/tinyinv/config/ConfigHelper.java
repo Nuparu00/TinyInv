@@ -12,14 +12,14 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class ConfigHelper {
 
-    private static final ForgeConfigSpec.Builder commonBuilder = new ForgeConfigSpec.Builder();
+    private static final ForgeConfigSpec.Builder serverBuilder = new ForgeConfigSpec.Builder();
     private static final ForgeConfigSpec.Builder clientBuilder = new ForgeConfigSpec.Builder();
-    public static final ForgeConfigSpec commonConfig;
+    public static final ForgeConfigSpec serverConfig;
     public static final ForgeConfigSpec clientConfig;
 
     static {
-        CommonConfig.init(commonBuilder);
-        commonConfig = commonBuilder.build();
+        ServerConfig.init(serverBuilder);
+        serverConfig = serverBuilder.build();
 
 
         ClientConfig.init(clientBuilder);

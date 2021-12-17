@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "nuparu.tinyinv.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "mixins.tinyinv.refmap.json",
+  "mixins": [
+    "MixinAbstractContainerScreen",
+    "MixinInventory"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

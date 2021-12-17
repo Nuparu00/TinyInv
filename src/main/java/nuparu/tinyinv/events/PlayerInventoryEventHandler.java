@@ -1,8 +1,9 @@
 package nuparu.tinyinv.events;
 
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import nuparu.tinyinv.utils.Utils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,16 +14,16 @@ public class PlayerInventoryEventHandler {
 
     @SubscribeEvent
     public static void onContainerEvent(PlayerContainerEvent.Open event){
-        Container container = event.getContainer();
-        PlayerEntity player = event.getPlayer();
+        AbstractContainerMenu container = event.getContainer();
+        Player player = event.getPlayer();
         Utils.fixContainer(container,player);
     }
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!(event.getEntity() instanceof PlayerEntity)) {
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
-        PlayerEntity player = (PlayerEntity)event.getEntity();
+        Player player = (Player)event.getEntity();
         Utils.fixContainer(player.containerMenu,player);
     }
 }

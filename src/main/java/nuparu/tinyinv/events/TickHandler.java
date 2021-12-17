@@ -1,46 +1,29 @@
 package nuparu.tinyinv.events;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import nuparu.tinyinv.TinyInv;
-import nuparu.tinyinv.config.ClientConfig;
-import nuparu.tinyinv.config.CommonConfig;
+import nuparu.tinyinv.config.ServerConfig;
 import nuparu.tinyinv.utils.Utils;
-import nuparu.tinyinv.utils.client.RenderUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TickHandler {
 
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        Player player = event.player;
+        if(player == null) return;
+        if (player.getInventory().selected >= Utils.getHotbarSlots(player)) {
+            player.getInventory().selected = 0;
+        }
+        //player.getInventory().selected = 11;
         if (event.phase == TickEvent.Phase.START) {
-            PlayerEntity player = event.player;
-            if(player == null) return;
-            if (player.inventory.selected >= Utils.getHotbarSlots()) {
-                player.inventory.selected = 0;
-            }
-            if (CommonConfig.disableOffhand.get() && !player.getOffhandItem().isEmpty()) {
+
+            if (ServerConfig.disableOffhand.get() && !player.getOffhandItem().isEmpty()) {
                 //player.captureDrops = true;
                 ItemEntity entity = player.drop(player.getOffhandItem(), false, false);
                 //player.capturedDrops.clear();
@@ -49,10 +32,10 @@ public class TickHandler {
                 if (!player.level.isClientSide()) {
                     player.level.addFreshEntity(entity);
                 }
-                player.setItemInHand(Hand.OFF_HAND, ItemStack.EMPTY);
+                player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
             }
-            PlayerInventory inv = player.inventory;
-            for (int i = 0; i < CommonConfig.armorStartID.get(); i++) {
+            Inventory inv = player.getInventory();
+            for (int i = 0; i < ServerConfig.armorStartID.get(); i++) {
                 if(!Utils.shouldBeRemoved(i,player, player.inventoryMenu)) continue;
                 ItemStack stack = inv.getItem(i);
                 if (!stack.isEmpty()) {

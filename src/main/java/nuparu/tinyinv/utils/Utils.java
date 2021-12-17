@@ -1,72 +1,71 @@
 package nuparu.tinyinv.utils;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
 import nuparu.tinyinv.config.ClientConfig;
-import nuparu.tinyinv.config.CommonConfig;
+import nuparu.tinyinv.config.ServerConfig;
 import nuparu.tinyinv.inventory.FakeSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
+import javax.annotation.Nullable;
 
 public class Utils {
-
     /*
     Replaces Vanilla player slots by "Fake slots"
      */
-    public static void fixContainer(Container container, PlayerEntity player) {
+    public static void fixContainer(AbstractContainerMenu container, Player player) {
 
         for (int i = 0; i < container.slots.size(); i++) {
             Slot slot = container.slots.get(i);
             if (shouldBeRemoved(slot, player,container)) {
-                container.slots.set(i, new FakeSlot(slot.container, slot.getSlotIndex(), slot.x, slot.y));
+                System.out.println("shouldBeRemoved " + player
+                .isCreative() + " " + ServerConfig.excludeCreativeModePlayers.get());
+                container.slots.set(i, new FakeSlot(slot.container, slot.getSlotIndex(), slot.x, slot.y,player));
             }
         }
 
     }
 
-    public static boolean shouldBeRemoved(Slot slot, PlayerEntity player, Container container) {
-        if (slot.container != player.inventory) return false;
+    public static boolean shouldBeRemoved(Slot slot, Player player, AbstractContainerMenu container) {
+        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        if (slot.container != player.getInventory()) return false;
         return shouldBeRemoved(slot.getSlotIndex(),player,container);
     }
 
-    public static boolean shouldBeHidden(Slot slot, PlayerEntity player, Container container) {
-        if (slot.container != player.inventory) return false;
+    public static boolean shouldBeHidden(Slot slot, Player player, AbstractContainerMenu container) {
+        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        if (slot.container != player.getInventory()) return false;
         int id = slot.getSlotIndex();
         return shouldBeRemoved(id,player,slot.container) || (ClientConfig.hideOffhand.get() && isOffhandSlot(slot,player));
     }
 
-    public static boolean shouldBeRemoved(int id, PlayerEntity player, Object container){
-        if (CommonConfig.disableOffhand.get() && isOffhandSlot(id,player,container)) return true;
+    public static boolean shouldBeRemoved(int id, Player player, Object container){
+        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        if (ServerConfig.disableOffhand.get() && isOffhandSlot(id,player,container)) return true;
 
-        if (CommonConfig.countSlotsFromStart.get()) {
-            return (id >= CommonConfig.inventorySlots.get() && id < CommonConfig.armorStartID.get());
+        if (ServerConfig.countSlotsFromStart.get()) {
+            return (id >= ServerConfig.inventorySlots.get() && id < ServerConfig.armorStartID.get());
         }
-        return (id < CommonConfig.armorStartID.get()) && ((id < 9 && id >= CommonConfig.inventorySlots.get()) ||
-                (id >= 9 && id <= CommonConfig.armorStartID.get() - 1 - (Math.max(CommonConfig.inventorySlots.get() - 9, 0))));
+        return (id < ServerConfig.armorStartID.get()) && ((id < 9 && id >= ServerConfig.inventorySlots.get()) ||
+                (id >= 9 && id <= ServerConfig.armorStartID.get() - 1 - (Math.max(ServerConfig.inventorySlots.get() - 9, 0))));
     }
 
 
-    public static boolean isOffhandSlot(Slot slot, PlayerEntity player) {
-        return slot.getSlotIndex() == 40 && (slot.container instanceof PlayerContainer || slot.container instanceof PlayerInventory);
+    public static boolean isOffhandSlot(Slot slot, Player player) {
+        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        return slot.getSlotIndex() == Inventory.SLOT_OFFHAND && (slot.container instanceof InventoryMenu || slot.container instanceof Inventory);
     }
 
-    public static boolean isOffhandSlot(int id, PlayerEntity player, Object container) {
-        return id == 40 && (container instanceof PlayerContainer || container instanceof PlayerInventory);
+    public static boolean isOffhandSlot(int id, Player player, Object container) {
+        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        return id == Inventory.SLOT_OFFHAND && (container instanceof InventoryMenu || container instanceof Inventory);
     }
 
-    public static int getHotbarSlots() {
-        return Math.min(Math.min(CommonConfig.inventorySlots.get(), CommonConfig.hotbarSlots.get()), 9);
+    public static int getHotbarSlots(@Nullable  Player player) {
+        //if(player != null && player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return 9;
+        return Math.min(ServerConfig.inventorySlots.get(), ServerConfig.hotbarSlots.get());
     }
 
     public static double clamp(double value, double min, double max) {

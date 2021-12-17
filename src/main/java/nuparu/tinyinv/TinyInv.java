@@ -1,15 +1,15 @@
 package nuparu.tinyinv;
 
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.RegistryObject;
 import nuparu.tinyinv.config.ConfigHelper;
 import nuparu.tinyinv.events.ClientEventHandler;
 import nuparu.tinyinv.events.PlayerInventoryEventHandler;
 import nuparu.tinyinv.events.TickHandler;
 import nuparu.tinyinv.item.ItemFake;
-import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -31,9 +31,9 @@ public class TinyInv {
     public static final RegistryObject<Item> FAKE_ITEM = ITEMS.register("fake_item", () -> new ItemFake());
 
     public TinyInv() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHelper.commonConfig);
-        ConfigHelper.loadConfig(ConfigHelper.commonConfig,
-                FMLPaths.CONFIGDIR.get().resolve("tinyinv-common.toml").toString());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHelper.serverConfig);
+        ConfigHelper.loadConfig(ConfigHelper.serverConfig,
+                FMLPaths.CONFIGDIR.get().resolve("tinyinv-server.toml").toString());
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigHelper.clientConfig);
         ConfigHelper.loadConfig(ConfigHelper.clientConfig,
                 FMLPaths.CONFIGDIR.get().resolve("tinyinv-client.toml").toString());
