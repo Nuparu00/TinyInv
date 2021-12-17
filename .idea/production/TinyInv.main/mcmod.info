@@ -1,0 +1,16 @@
+[
+{
+  "modid": "tinyinv",
+  "name": "Tiny Inv",
+  "description": "Reducing your inventory in the most vanilla-friendly way possible.",
+  "version": "1.2",
+  "mcversion": "${mcversion}",
+  "url": "https://www.curseforge.com/members/nuparu00/projects",
+  "updateUrl": "",
+  "authorList": ["Nuparu00"],
+  "credits": "",
+  "logoFile": "logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
