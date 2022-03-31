@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "tinyinv",
+  "version": "${version}",
+  "name": "Tinyinv",
+  "description": "Reducing your inventory in the most vanilla-friendly way possible.",
+  "authors": [
+    "Nuparu00"
+  ],
+  "contact": {
+    "website": "https://www.curseforge.com/minecraft/mc-mods/tinyinv-fabric"
+  },
+  "license": "MIT",
+  "icon": "assets/tinyinv/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "nuparu.tinyinv.client.TinyInvClient"
+    ],
+    "main": [
+      "nuparu.tinyinv.TinyInv"
+    ]
+  },
+  "mixins": [
+    "tinyinv.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.13.2",
+    "fabric": "*",
+    "minecraft": "1.18.1"
+  }
+}

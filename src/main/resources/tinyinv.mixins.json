@@ -1,15 +1,24 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "package": "nuparu.tinyinv.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "refmap": "tinyinv.refmap.json",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "MixinContainerScreen"
+    "MixinServerPlayerEntity",
+    "MixinItemEntity",
+    "MixinServerWorld",
+    "MixinServerPlayNetworkHandler"
   ],
-  "client":[
+  "client": [
+    "MixinMinecraftClient",
+    "MixinClientWorld",
+    "MixinInGameHud",
+    "MixinHandledScreen",
+    "MixinScreen",
+    "MixinClientPlayerEntity",
+    "MixinClientPlayNetworkHandler"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "minVersion": "0.8"
+  }
 }

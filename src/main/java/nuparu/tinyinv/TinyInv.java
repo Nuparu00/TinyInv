@@ -1,62 +1,54 @@
 package nuparu.tinyinv;
 
-import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.RegistryObject;
-import nuparu.tinyinv.config.ConfigHelper;
-import nuparu.tinyinv.events.ClientEventHandler;
-import nuparu.tinyinv.events.PlayerInventoryEventHandler;
-import nuparu.tinyinv.events.TickHandler;
-import nuparu.tinyinv.item.ItemFake;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.minecraft.item.Item;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.GameRules;
+import nuparu.tinyinv.event.ServerTickListener;
+import nuparu.tinyinv.item.FakeItem;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+public class TinyInv implements ModInitializer {
 
-@Mod(TinyInv.MODID)
-public class TinyInv {
-    public static final String MODID = "tinyinv";
+    public static final Logger LOGGER = LogManager.getLogger();
 
-    private static Logger logger;
+    //public static ServerConfig CONFIG = new ServerConfig();
+    public static final GameRules.Key<GameRules.IntRule> HOTBAR_SIZE =
+            GameRuleRegistry.register("hotbarSize", GameRules.Category.PLAYER, GameRuleFactory.createIntRule(9));
+    public static final GameRules.Key<GameRules.IntRule> INVENTORY_SIZE =
+            GameRuleRegistry.register("inventorySize", GameRules.Category.PLAYER, GameRuleFactory.createIntRule(36));
+    public static final GameRules.Key<GameRules.IntRule> ARMOR_START_ID =
+            GameRuleRegistry.register("armorStartID", GameRules.Category.PLAYER, GameRuleFactory.createIntRule(36));
+    public static final GameRules.Key<GameRules.BooleanRule> DISABLE_OFFHAND =
+            GameRuleRegistry.register("disableOffhand", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
+    public static final GameRules.Key<GameRules.BooleanRule> COUNT_FROM_START =
+            GameRuleRegistry.register("countSlotsFromStart", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
+    public static final GameRules.Key<GameRules.BooleanRule> EXCLUDE_CREATIVE =
+            GameRuleRegistry.register("excludeCreativeModePlayers", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(false));
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, TinyInv.MODID);
-    public static final RegistryObject<Item> FAKE_ITEM = ITEMS.register("fake_item", () -> new ItemFake());
+    public static Identifier SYNC_GAMERULE_INT_PACKET_ID = new Identifier("tinyinv","sync_int_gamerule");
+    public static Identifier SYNC_GAMERULE_BOOLEAN_PACKET_ID = new Identifier("tinyinv","sync_boolean_gamerule");
 
-    public TinyInv() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigHelper.serverConfig);
-        ConfigHelper.loadConfig(ConfigHelper.serverConfig,
-                FMLPaths.CONFIGDIR.get().resolve("tinyinv-server.toml").toString());
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigHelper.clientConfig);
-        ConfigHelper.loadConfig(ConfigHelper.clientConfig,
-                FMLPaths.CONFIGDIR.get().resolve("tinyinv-client.toml").toString());
+    public static final Item FAKE_ITEM = new FakeItem();
+    public static MinecraftServer server;
 
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(this::setup);
-        ITEMS.register(bus);
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new TickHandler());
-        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
-        MinecraftForge.EVENT_BUS.register(new PlayerInventoryEventHandler());
-
+    public static void onServerTick(MinecraftServer minecraftServer) {
+        server = minecraftServer;
     }
 
-
-    private void setup(final FMLCommonSetupEvent event) {
-
-    }
-
-    private void doClientStuff(final FMLClientSetupEvent event) {
-
-    }
-
+    @Override
+    public void onInitialize() {
+        Registry.register(Registry.ITEM, new Identifier("tinyinv", "fake_item"), FAKE_ITEM);
+        ServerTickEvents.END_SERVER_TICK.register(new ServerTickListener());
+        /*CONFIG.readConfigFromFile();
+        CONFIG.saveConfigToFile();
+        ServerLifecycleEvents.SERVER_STOPPED.register(instance -> CONFIG.saveConfigToFile());
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> new ConfigCommand<ServerCommandSource>(CONFIG).register(dispatcher, p -> p.hasPermissionLevel(2)));
+    */}
 }
