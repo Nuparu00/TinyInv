@@ -1,13 +1,12 @@
 package nuparu.tinyinv.events;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import nuparu.tinyinv.utils.Utils;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import nuparu.tinyinv.utils.Utils;
 
 @Mod.EventBusSubscriber
 public class PlayerInventoryEventHandler {

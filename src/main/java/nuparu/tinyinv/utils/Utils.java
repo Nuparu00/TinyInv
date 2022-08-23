@@ -21,7 +21,7 @@ public class Utils {
             Slot slot = container.slots.get(i);
             if (shouldBeRemoved(slot, player,container)) {
                 System.out.println("shouldBeRemoved " + player
-                .isCreative() + " " + ServerConfig.excludeCreativeModePlayers.get());
+                        .isCreative() + " " + ServerConfig.excludeCreativeModePlayers.get());
                 container.slots.set(i, new FakeSlot(slot.container, slot.getSlotIndex(), slot.x, slot.y,player));
             }
         }
@@ -29,20 +29,20 @@ public class Utils {
     }
 
     public static boolean shouldBeRemoved(Slot slot, Player player, AbstractContainerMenu container) {
-        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        //if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
         if (slot.container != player.getInventory()) return false;
         return shouldBeRemoved(slot.getSlotIndex(),player,container);
     }
 
     public static boolean shouldBeHidden(Slot slot, Player player, AbstractContainerMenu container) {
-        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        //if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
         if (slot.container != player.getInventory()) return false;
         int id = slot.getSlotIndex();
         return shouldBeRemoved(id,player,slot.container) || (ClientConfig.hideOffhand.get() && isOffhandSlot(slot,player));
     }
 
     public static boolean shouldBeRemoved(int id, Player player, Object container){
-        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        //if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
         if (ServerConfig.disableOffhand.get() && isOffhandSlot(id,player,container)) return true;
 
         if (ServerConfig.countSlotsFromStart.get()) {
@@ -54,12 +54,12 @@ public class Utils {
 
 
     public static boolean isOffhandSlot(Slot slot, Player player) {
-        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        //if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
         return slot.getSlotIndex() == Inventory.SLOT_OFFHAND && (slot.container instanceof InventoryMenu || slot.container instanceof Inventory);
     }
 
     public static boolean isOffhandSlot(int id, Player player, Object container) {
-        if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
+        //if(player.isCreative() && ServerConfig.excludeCreativeModePlayers.get()) return false;
         return id == Inventory.SLOT_OFFHAND && (container instanceof InventoryMenu || container instanceof Inventory);
     }
 

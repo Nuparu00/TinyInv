@@ -12,18 +12,17 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import nuparu.tinyinv.client.RenderUtils;
 import nuparu.tinyinv.utils.Utils;
-import nuparu.tinyinv.utils.client.RenderUtils;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    @OnlyIn(Dist.CLIENT)
     public static void onOverlayRenderPre(RenderGameOverlayEvent.PreLayer event) {
         if (event.getOverlay() == ForgeIngameGui.HOTBAR_ELEMENT) {
             event.setCanceled(true);
-            RenderUtils.renderHotbar(event.getWindow(), event.getPartialTicks(), event.getMatrixStack());
+            RenderUtils.renderHotbar(event.getWindow(), event.getPartialTick(), event.getPoseStack());
         }
         int rows = RenderUtils.getHotbarRows(event.getWindow());
         if (event.getOverlay() == ForgeIngameGui.PLAYER_HEALTH_ELEMENT ||
@@ -34,12 +33,11 @@ public class ClientEventHandler {
                 event.getOverlay() == ForgeIngameGui.HUD_TEXT_ELEMENT ||
                 event.getOverlay() == ForgeIngameGui.ITEM_NAME_ELEMENT ||
                 event.getOverlay() == ForgeIngameGui.AIR_LEVEL_ELEMENT) {
-            event.getMatrixStack().translate(0, -20 * (rows), 0);
+            event.getPoseStack().translate(0, -20 * (rows), 0);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    @OnlyIn(Dist.CLIENT)
     public static void onOverlayRenderPost(RenderGameOverlayEvent.PostLayer event) {
         int rows = RenderUtils.getHotbarRows(event.getWindow());
         if (event.getOverlay() == ForgeIngameGui.PLAYER_HEALTH_ELEMENT ||
@@ -50,7 +48,7 @@ public class ClientEventHandler {
                 event.getOverlay() == ForgeIngameGui.HUD_TEXT_ELEMENT ||
                 event.getOverlay() == ForgeIngameGui.ITEM_NAME_ELEMENT ||
                 event.getOverlay() == ForgeIngameGui.AIR_LEVEL_ELEMENT) {
-            event.getMatrixStack().translate(0, 20 * (rows), 0);
+            event.getPoseStack().translate(0, 20 * (rows), 0);
         }
     }
 
