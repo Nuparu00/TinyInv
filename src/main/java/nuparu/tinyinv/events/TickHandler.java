@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import nuparu.tinyinv.TinyInv;
 import nuparu.tinyinv.config.ServerConfig;
 import nuparu.tinyinv.init.ModItems;
 import nuparu.tinyinv.utils.Utils;

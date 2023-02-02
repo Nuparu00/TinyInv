@@ -1,5 +1,7 @@
 package nuparu.tinyinv.utils;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -8,8 +10,6 @@ import net.minecraft.world.inventory.Slot;
 import nuparu.tinyinv.config.ClientConfig;
 import nuparu.tinyinv.config.ServerConfig;
 import nuparu.tinyinv.inventory.FakeSlot;
-
-import javax.annotation.Nullable;
 
 public class Utils {
     /*

@@ -1,15 +1,15 @@
 package nuparu.tinyinv.mixin;
 
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
-import nuparu.tinyinv.config.ServerConfig;
-import nuparu.tinyinv.utils.Utils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import net.minecraft.world.entity.player.Inventory;
+import nuparu.tinyinv.config.ServerConfig;
+import nuparu.tinyinv.utils.Utils;
 
 @Mixin(Inventory.class)
 public class MixinInventory {
@@ -25,7 +25,7 @@ public class MixinInventory {
             p_35989_ = -1.0D;
         }
 
-        for(thys.selected = (int)((double)thys.selected - p_35989_); thys.selected < 0; thys.selected += Utils.getHotbarSlots(thys.player)) {
+        for(thys.selected = (int)(thys.selected - p_35989_); thys.selected < 0; thys.selected += Utils.getHotbarSlots(thys.player)) {
         }
 
         while(thys.selected >= Utils.getHotbarSlots(thys.player)) {

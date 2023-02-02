@@ -2,7 +2,7 @@ package nuparu.tinyinv.events;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,11 +14,11 @@ public class PlayerInventoryEventHandler {
     @SubscribeEvent
     public static void onContainerEvent(PlayerContainerEvent.Open event){
         AbstractContainerMenu container = event.getContainer();
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         Utils.fixContainer(container,player);
     }
     @SubscribeEvent
-    public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
+    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
