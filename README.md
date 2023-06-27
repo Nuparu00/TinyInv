@@ -9,4 +9,13 @@
 [![Discord](https://img.shields.io/discord/765992108602687558.svg?style=for-the-badge)](https://discord.gg/sJQWn8p)
 
 
-TinyInv is a mod that allows you to reduce the number of available inventory (and hotbar) slots and/or disable the offhand slot in a relatively "mod-friendly" way.
+TinyInv is a Minecraft mod, that allows you to manipulate the available inventory and hotbar slots on per-player bases. This includes:
+* decreasing the number of inventory slots
+* decreasing the number of hotbar slots
+* increasing the number of hotbar slots
+* disabling the offhand slot
+* disabling the individual armor slots
+* disabling the individual crafting input slots
+
+This can be done both globally for all players - inside the config file, or individually for one player using attribute modifiers.
+The mod also has a built-in way of adding attribute modifiers to existing items and status effects using datapacks.
