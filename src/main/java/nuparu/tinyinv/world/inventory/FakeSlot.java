@@ -1,4 +1,5 @@
-package nuparu.tinyinv.inventory;
+package nuparu.tinyinv.world.inventory;
+
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -9,10 +10,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class FakeSlot extends Slot {
     public Player player;
+    public Slot originalSlot;
 
-    public FakeSlot(Container inventoryIn, int index, int xPosition, int yPosition, Player player) {
+    public FakeSlot(Container inventoryIn, int index, int xPosition, int yPosition, Player player, Slot originalSLot) {
         super(inventoryIn, index, xPosition, yPosition);
         this.player = player;
+        this.originalSlot = originalSLot;
     }
 
     @Override

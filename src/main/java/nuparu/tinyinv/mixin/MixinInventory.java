@@ -1,76 +1,102 @@
 package nuparu.tinyinv.mixin;
 
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import nuparu.tinyinv.event.PlayerEventHandler;
+import nuparu.tinyinv.init.ModItems;
+import nuparu.tinyinv.world.entity.player.PlayerSlots;
+import nuparu.tinyinv.world.inventory.InventoryMixinHelper;
+import nuparu.tinyinv.world.inventory.SlotUtils;
+import nuparu.tinyinv.world.item.FakeItem;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.world.entity.player.Inventory;
-import nuparu.tinyinv.config.ServerConfig;
-import nuparu.tinyinv.utils.Utils;
-
 @Mixin(Inventory.class)
 public class MixinInventory {
+    @Shadow @Final public NonNullList<ItemStack> items;
 
-    @Inject(at = @At("HEAD") ,method = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V", cancellable = true)
-    public void swapPaint(double p_35989_, CallbackInfo ci) {
-        Inventory thys = ((Inventory) (Object) this);
-        if (p_35989_ > 0.0D) {
-            p_35989_ = 1.0D;
-        }
+    @Shadow @Final public Player player;
 
-        if (p_35989_ < 0.0D) {
-            p_35989_ = -1.0D;
-        }
+    @Shadow @Final public NonNullList<ItemStack> armor;
 
-        for(thys.selected = (int)(thys.selected - p_35989_); thys.selected < 0; thys.selected += Utils.getHotbarSlots(thys.player)) {
-        }
+    @Shadow @Final public NonNullList<ItemStack> offhand;
 
-        while(thys.selected >= Utils.getHotbarSlots(thys.player)) {
-            thys.selected -= Utils.getHotbarSlots(thys.player);
+    @Shadow public int selected;
+
+    @Inject(at = @At("RETURN") ,method = "tick()V")
+    private void tick(CallbackInfo ci) {
+        SlotUtils.fixSelectedSlot(player);
+
+        boolean updatePlayer = false;
+
+        int slotId = 0;
+        for(ItemStack stack : items){
+            if(stack.is(ModItems.FAKE_ITEM.get())){
+                updatePlayer = updatePlayer || FakeItem.checkValidity(stack,player,slotId);
+            }
+            slotId++;
         }
-        ci.cancel();
+        for(ItemStack stack : armor){
+            if(stack.is(ModItems.FAKE_ITEM.get())){
+                updatePlayer = updatePlayer || FakeItem.checkValidity(stack,player,slotId);
+            }
+            slotId++;
+        }
+        for(ItemStack stack : offhand){
+            if(stack.is(ModItems.FAKE_ITEM.get())){
+                updatePlayer = updatePlayer || FakeItem.checkValidity(stack,player,slotId);
+            }
+            slotId++;
+        }
+        if(updatePlayer){
+            if(player instanceof ServerPlayer serverPlayer) {
+                PlayerEventHandler.schedulePlayerForUpdate(serverPlayer);
+            }
+            else{
+                //SlotUtils.fixContainer(player.inventoryMenu, player);
+                //SlotUtils.fixContainer(player.containerMenu, player);
+            }
+        }
     }
 
-    @Inject(at = @At("HEAD") ,method = "Lnet/minecraft/world/entity/player/Inventory;getSuitableHotbarSlot()I", cancellable = true)
-    public void getSuitableHotbarSlot(CallbackInfoReturnable<Integer> cir) {
-        Inventory thys = ((Inventory) (Object) this);
-        for(int i = 0; i < Utils.getHotbarSlots(thys.player); ++i) {
-            int j = (thys.selected + i) % ServerConfig.hotbarSlots.get();
-            if (thys.items.get(j).isEmpty()) {
-                cir.setReturnValue(j);
-                cir.cancel();
-                return;
-            }
-        }
 
-        for(int k = 0; k < Utils.getHotbarSlots(thys.player); ++k) {
-            int l = (thys.selected + k) % ServerConfig.hotbarSlots.get();
-            if (!thys.items.get(l).isEnchanted()) {
-                cir.setReturnValue(l);
-                cir.cancel();
-                return;
-            }
-        }
-
-        cir.setReturnValue(thys.selected);
+    @Inject(at = @At("HEAD") ,method = "getSuitableHotbarSlot()I", cancellable = true)
+    private void getSuitableHotbarSlot(CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(InventoryMixinHelper.getSuitableHotbarSlot((Inventory)(Object)this));
         cir.cancel();
     }
-
-    @Inject(at = @At("HEAD") ,method = "Lnet/minecraft/world/entity/player/Inventory;getSelectionSize()I", cancellable = true)
-    private static void getSelectionSize(CallbackInfoReturnable<Integer> cir) {
-        if(ServerConfig.hotbarSlots != null) {
-            cir.setReturnValue(Utils.getHotbarSlots(null));
-            cir.cancel();
-        }
+    @Inject(at = @At("HEAD") ,method = "swapPaint(D)V", cancellable = true)
+    private void swapPaint(double p_35989_, CallbackInfo ci) {
+        Inventory self = (Inventory)(Object)this;
+        InventoryMixinHelper.swapPaint(p_35989_, player, self);
+        ci.cancel();
     }
-    @Inject(at = @At("HEAD") ,method = "Lnet/minecraft/world/entity/player/Inventory;isHotbarSlot(I)Z", cancellable = true)
-    private static void isHotbarSlot(int slot, CallbackInfoReturnable<Boolean> cir) {
-        if(ServerConfig.hotbarSlots != null) {
-            cir.setReturnValue(slot >= 0 && slot < Utils.getHotbarSlots(null));
-            cir.cancel();
-        }
+    @Inject(at = @At("HEAD") ,method = "getSelected()Lnet/minecraft/world/item/ItemStack;", cancellable = true)
+    private void getSelected(CallbackInfoReturnable<ItemStack> cir) {
+        Inventory self = (Inventory)(Object)this;
+        cir.cancel();
+        cir.setReturnValue(InventoryMixinHelper.getSelected(self));
+    }
+    @Inject(at = @At("HEAD") ,method = "setPickedItem(Lnet/minecraft/world/item/ItemStack;)V", cancellable = true)
+    private void setPickedItem(ItemStack p_36013_, CallbackInfo ci) {
+        Inventory self = (Inventory)(Object)this;
+        ci.cancel();
+        InventoryMixinHelper.setPickedItem(p_36013_, self);
+    }
+
+    @Inject(at = @At("HEAD") ,method = "getDestroySpeed(Lnet/minecraft/world/level/block/state/BlockState;)F", cancellable = true)
+    private void getDestroySpeed(BlockState p_36021_, CallbackInfoReturnable<Float> cir) {
+        cir.cancel();
+        cir.setReturnValue((PlayerSlots.getSlots(player) == 0 ? ItemStack.EMPTY : this.items.get(this.selected)).getDestroySpeed(p_36021_));
     }
 }

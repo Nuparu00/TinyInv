@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import nuparu.tinyinv.utils.Utils;
+import nuparu.tinyinv.world.inventory.SlotUtils;
 
 public class FakeItem extends Item {
     public FakeItem() {
@@ -14,19 +14,17 @@ public class FakeItem extends Item {
     }
 
     @Override
-    public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity)
-    {
+    public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
         entity.kill();
         return false;
     }
 
-    @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entityIn, int itemSlot, boolean selected) {
-        if (entityIn instanceof Player) {
-            Player player = (Player)entityIn;
-            if (!Utils.shouldBeRemoved(itemSlot, player, player.inventoryMenu)) {
-                player.getInventory().setItem(itemSlot,ItemStack.EMPTY);
-            }
+    public static boolean checkValidity(ItemStack stack, Player player, int itemSlot) {
+        if(player.level().isClientSide()) return false;
+        if (!SlotUtils.shouldRemoveSlot(player, itemSlot)) {
+            player.getInventory().setItem(itemSlot, ItemStack.EMPTY);
+            return true;
         }
+        return false;
     }
 }

@@ -1,3 +1,16 @@
 {
-"item.tinyinv.fake_item":"Fake Item"
+  "item.tinyinv.fake_item": "",
+  "item.tinyinv.backpack": "Backpack",
+
+  "tinyinv.slots" : "Inventory Slots",
+  "tinyinv.hotbar_slots" : "Hotbar Slots",
+  "tinyinv.offhand_slot" : "Offhand Slot",
+  "tinyinv.head_slot" : "Head Slot",
+  "tinyinv.chest_slot" : "Chest Slot",
+  "tinyinv.legs_slot" : "Legs Slot",
+  "tinyinv.feet_slot" : "Feet Slot",
+  "tinyinv.crafting_top_left_slot" : "Top Left Crafting Slot",
+  "tinyinv.crafting_top_right_slot" : "Top Right Crafting Slot",
+  "tinyinv.crafting_bottom_left_slot" : "Bottom Left Crafting Slot",
+  "tinyinv.crafting_bottom_right_slot" : "Bottom Right Crafting Slot"
 }

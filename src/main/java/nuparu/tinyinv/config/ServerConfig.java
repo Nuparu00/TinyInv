@@ -9,18 +9,37 @@ public class ServerConfig {
 
     public static IntValue inventorySlots;
     public static IntValue hotbarSlots;
-    public static IntValue armorStartID;
-    public static BooleanValue disableOffhand;
+    public static BooleanValue offhandSlot;
+    public static BooleanValue headSlot;
+    public static BooleanValue chestSlot;
+    public static BooleanValue legsSlot;
+    public static BooleanValue feetSlot;
+    public static BooleanValue craftingTLSlot;
+    public static BooleanValue craftingTRSlot;
+    public static BooleanValue craftingBLSlot;
+    public static BooleanValue craftingBRSlot;
     public static BooleanValue countSlotsFromStart;
     public static BooleanValue excludeCreativeModePlayers;
+    public static ForgeConfigSpec.EnumValue<Indexing> indexing;
+
 
 
     public static void init(ForgeConfigSpec.Builder server) {
-        inventorySlots = server.comment("Number of slots").defineInRange("general.inventory_slots", 36, 1, 36);
-        hotbarSlots = server.comment("Number of hotbar slots").defineInRange("general.hotbar_slots", 9, 1, 36);
-        armorStartID = server.comment("ID of the first armor (non-container) inventory slot)").defineInRange("general.armor_start_id", 36, 1, Integer.MAX_VALUE);
-        disableOffhand = server.comment("Should disable the left hand?").define("general.disable_offhand", false);
-        countSlotsFromStart = server.comment("Counts slots by their numerical ID - hotbar has IDs 0-8, the top inventory row 9-17,....").define("general.count_slots_from_start", true);
+        inventorySlots = server.comment("The default number of slots").defineInRange("general.inventory_slots", 36, 0, 36);
+        hotbarSlots = server.comment("The default number of hotbar slots").defineInRange("general.hotbar_slots", 9, 0, 36);
+        offhandSlot = server.comment("Should offhand slot be enabled?").define("general.offhand_slot", true);
+        headSlot = server.comment("Should offhand slot be enabled?").define("general.head_slot", true);
+        chestSlot = server.comment("Should offhand slot be enabled?").define("general.chest_slot", true);
+        legsSlot = server.comment("Should offhand slot be enabled?").define("general.legs_slot", true);
+        feetSlot = server.comment("Should offhand slot be enabled?").define("general.feet_slot", true);
+        craftingTLSlot = server.comment("Should offhand slot be enabled?").define("general.crafting_top_left_slot", true);
+        craftingTRSlot = server.comment("Should offhand slot be enabled?").define("general.crafting_top_right_slot", true);
+        craftingBLSlot = server.comment("Should offhand slot be enabled?").define("general.crafting_bottom_left_slot", true);
+        craftingBRSlot = server.comment("Should offhand slot be enabled?").define("general.crafting_bottom_right_slot", true);
+
+        countSlotsFromStart = server.comment("Counts slots by their numerical IDs - hotbar has IDs 0-8, the top inventory row 9-17,....").define("general.count_slots_from_start", false);
         excludeCreativeModePlayers = server.comment("Should exclude the players who are in creative mode?").define("general.exclude_creative_mode_players", true);
+        indexing = server.comment("What indexing to use? Mojang counts inventory slots from top to bottom, while TinyInv counts from bottom to top (which lines up better with hotbar indexes)").defineEnum("general.indexing",Indexing.TINYINV,Indexing.values());
+
     }
 }
