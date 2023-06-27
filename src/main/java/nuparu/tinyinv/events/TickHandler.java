@@ -5,16 +5,18 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import nuparu.tinyinv.TinyInv;
-import nuparu.tinyinv.config.ServerConfig;
-import nuparu.tinyinv.utils.Utils;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import nuparu.tinyinv.config.ServerConfig;
+import nuparu.tinyinv.init.ModItems;
+import nuparu.tinyinv.utils.Utils;
 
+@Mod.EventBusSubscriber
 public class TickHandler {
 
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         if(player == null) return;
         if (player.getInventory().selected >= Utils.getHotbarSlots(player)) {
@@ -39,7 +41,7 @@ public class TickHandler {
                 if(!Utils.shouldBeRemoved(i,player, player.inventoryMenu)) continue;
                 ItemStack stack = inv.getItem(i);
                 if (!stack.isEmpty()) {
-                    if(stack.getItem() == TinyInv.FAKE_ITEM.get()) continue;
+                    if(stack.getItem() == ModItems.FAKE_ITEM.get()) continue;
                     //player.captureDrops = true;
                     ItemEntity entity = player.drop(stack, false, false);
                     if(entity == null) continue;
@@ -48,10 +50,10 @@ public class TickHandler {
 
                     if (player.level != null && !player.level.isClientSide()) {
                         player.level.addFreshEntity(entity);
-                        inv.setItem(i, new ItemStack(TinyInv.FAKE_ITEM.get()));
+                        inv.setItem(i, new ItemStack(ModItems.FAKE_ITEM.get()));
                     }
                 }else{
-                    inv.setItem(i, new ItemStack(TinyInv.FAKE_ITEM.get()));
+                    inv.setItem(i, new ItemStack(ModItems.FAKE_ITEM.get()));
                 }
             }
         }
