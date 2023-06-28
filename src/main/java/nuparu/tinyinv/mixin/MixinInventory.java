@@ -2,7 +2,6 @@ package nuparu.tinyinv.mixin;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -61,10 +60,6 @@ public class MixinInventory {
         if(updatePlayer){
             if(player instanceof ServerPlayer serverPlayer) {
                 PlayerEventHandler.schedulePlayerForUpdate(serverPlayer);
-            }
-            else{
-                //SlotUtils.fixContainer(player.inventoryMenu, player);
-                //SlotUtils.fixContainer(player.containerMenu, player);
             }
         }
     }

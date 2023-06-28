@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 public class ServerGamePacketListenerImplMixinHelper {
     public static void handleSetCarriedItem(ServerboundSetCarriedItemPacket p_9909_, ServerGamePacketListenerImpl listener, Logger logger) {
         PacketUtils.ensureRunningOnSameThread(p_9909_, listener, listener.player.serverLevel());
-        System.out.println("SLOT " + p_9909_.getSlot() + " "  + SlotUtils.normalizeSlotId(p_9909_.getSlot()));
         if (p_9909_.getSlot() >= 0 && SlotUtils.normalizeSlotId(p_9909_.getSlot()) < PlayerSlots.getHotbarSlots(listener.player)) {
             if (listener.player.getInventory().selected != p_9909_.getSlot() && listener.player.getUsedItemHand() == InteractionHand.MAIN_HAND) {
                 listener.player.stopUsingItem();

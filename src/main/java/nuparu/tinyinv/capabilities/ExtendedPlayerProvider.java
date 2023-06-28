@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ExtendedPlayerProvider implements ICapabilitySerializable<CompoundTag> {
-    public static final Capability<IExtendedPlayer> EXTENDED_PLAYER_CAPABILITY = CapabilityManager.get(new CapabilityToken<IExtendedPlayer>() {
+    public static final Capability<IExtendedPlayer> EXTENDED_PLAYER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     private final IExtendedPlayer instance = new ExtendedPlayer();

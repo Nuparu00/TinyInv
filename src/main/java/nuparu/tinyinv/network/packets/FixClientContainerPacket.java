@@ -4,6 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
 import nuparu.tinyinv.TinyInv;
+import nuparu.tinyinv.client.ClientSafeUtils;
 import nuparu.tinyinv.world.inventory.SlotUtils;
 
 import java.util.function.Supplier;
@@ -22,7 +23,7 @@ public class FixClientContainerPacket {
 
         public static void handle(FixClientContainerPacket msg, Supplier<NetworkEvent.Context> ctx) {
             ctx.get().enqueueWork(() -> {
-                Player player = TinyInv.proxy.getPlayerEntityFromContext(ctx);
+                Player player = ClientSafeUtils.getPlayer();
                 SlotUtils.fixContainer(player.inventoryMenu, player);
                 SlotUtils.fixContainer(player.containerMenu, player);
             });

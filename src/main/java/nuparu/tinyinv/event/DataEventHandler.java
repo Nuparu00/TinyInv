@@ -17,7 +17,6 @@ public class DataEventHandler {
     }
     @SubscribeEvent
     public static void onDatapackSync(OnDatapackSyncEvent event) {
-        System.out.println("SYNC PLAYER");
         if(event.getPlayer() != null){
             PacketManager.sendTo(PacketManager.syncItemAttributeData,new SyncItemAttributeDataToClient(), event.getPlayer());
         }

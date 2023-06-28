@@ -5,19 +5,14 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import nuparu.tinyinv.TinyInv;
 import nuparu.tinyinv.data.attributes.AttributeDataManager;
-import nuparu.tinyinv.world.inventory.SlotUtils;
-import org.checkerframework.checker.units.qual.A;
-import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -80,9 +75,7 @@ public class SyncItemAttributeDataToClient {
     public static class Handler {
 
         public static void handle(SyncItemAttributeDataToClient msg, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().enqueueWork(() -> {
-                AttributeDataManager.INSTANCE.setItemModifiers(msg.itemModifiers);
-            });
+            ctx.get().enqueueWork(() -> AttributeDataManager.INSTANCE.setItemModifiers(msg.itemModifiers));
             ctx.get().setPacketHandled(true);
         }
     }

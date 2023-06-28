@@ -19,6 +19,13 @@ public class FakeItem extends Item {
         return false;
     }
 
+    /**
+     * {@link Item#inventoryTick(ItemStack, Level, Entity, int, boolean)}, but with correct slot IDs
+     * @param stack Stack
+     * @param player Player
+     * @param itemSlot Slot ID
+     * @return Was invalid?
+     */
     public static boolean checkValidity(ItemStack stack, Player player, int itemSlot) {
         if(player.level().isClientSide()) return false;
         if (!SlotUtils.shouldRemoveSlot(player, itemSlot)) {

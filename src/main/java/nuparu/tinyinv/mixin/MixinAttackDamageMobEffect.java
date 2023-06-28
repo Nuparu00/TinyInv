@@ -2,10 +2,7 @@ package nuparu.tinyinv.mixin;
 
 import net.minecraft.world.effect.AttackDamageMobEffect;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 import nuparu.tinyinv.TinyInv;
-import nuparu.tinyinv.world.entity.player.PlayerSlots;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

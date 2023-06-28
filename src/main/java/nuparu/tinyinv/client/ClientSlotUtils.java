@@ -21,7 +21,7 @@ public class ClientSlotUtils {
     public static int getHotbarSlots(){
         Entity camera = Minecraft.getInstance().getCameraEntity();
         if(camera == Minecraft.getInstance().player){
-            Player player = Minecraft.getInstance().player;;
+            Player player = Minecraft.getInstance().player;
             if(!player.isSpectator()){
                 return PlayerSlots.getHotbarSlots(player);
             }

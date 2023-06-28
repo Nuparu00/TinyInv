@@ -1,17 +1,11 @@
 package nuparu.tinyinv.mixin;
 
 
-import net.minecraft.network.protocol.PacketUtils;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Inventory;
-import nuparu.tinyinv.world.entity.player.PlayerSlots;
 import nuparu.tinyinv.world.inventory.ServerGamePacketListenerImplMixinHelper;
-import nuparu.tinyinv.world.inventory.SlotUtils;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

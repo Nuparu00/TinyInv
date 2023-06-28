@@ -1,7 +1,6 @@
 package nuparu.tinyinv.world.inventory;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,11 +19,10 @@ public class SlotUtils {
 
     /**
      * Determines whether a slot (the entity inside a container/gui) should be hidden
-     *
-     * @param slot
-     * @param player
-     * @param container
-     * @return
+     * @param slot Container slot
+     * @param player Player
+     * @param container Container
+     * @return should slot be hidden?
      */
     public static boolean shouldHideSlot(Slot slot, Player player, AbstractContainerMenu container) {
         if (isInventorySlot(container, slot, player)) {
@@ -39,10 +37,9 @@ public class SlotUtils {
 
     /**
      * Determines whether a slot (logically the place in the list of stacks) should be considered removed
-     *
-     * @param player
-     * @param slot
-     * @return
+     * @param player Player
+     * @param slot slot ID
+     * @return  should slot be removed?
      */
     public static boolean shouldRemoveSlot(Player player, int slot) {
 
@@ -53,6 +50,12 @@ public class SlotUtils {
                 isAndShouldRemoveArmorSlot(player, slot);
     }
 
+    /**
+     * Determines whether a crafting slot should be removed
+     * @param player Player
+     * @param slot Crafting slot ID
+     * @return should slot be removed?
+     */
     public static boolean shouldRemoveCraftingSlot(Player player, int slot) {
         return switch (slot) {
             case 0 -> !PlayerSlots.getCraftingTopLeftSlot(player);
@@ -63,18 +66,42 @@ public class SlotUtils {
         };
     }
 
+    /**
+     * Determines whether the crafting result slot should be removed
+     * @param player Player
+     * @param slot Crafting slot ID
+     * @return should slot be removed?
+     */
     public static boolean shouldRemoveCraftingResultSlot(Player player, int slot) {
         return !PlayerSlots.getCraftingTopLeftSlot(player) && !PlayerSlots.getCraftingTopRightSlot(player) && !PlayerSlots.getCraftingBottomLeftSlot(player) && !PlayerSlots.getCraftingBottomRightSlot(player);
     }
 
+    /**
+     * Determines whether the given slot is a regular inventory slot, that should be removed
+     * @param player Player
+     * @param slot slot ID
+     * @return Is the given slot a regular inventory slot, that should be removed?
+     */
     public static boolean isAndShouldRemoveInventorySlot(Player player, int slot) {
         return slot < Inventory.INVENTORY_SIZE && PlayerSlots.getSlots(player) <= slot;
     }
 
+    /**
+     * Determines whether the given slot is the offhand slot and should be removed
+     * @param player Player
+     * @param slot slot ID
+     * @return Is the given slot the offhand slot and be removed?
+     */
     public static boolean isAndShouldRemoveOffhandSlot(Player player, int slot) {
-        return isOffhandSlot(slot) && shouldRemovedOffhandSlot(player);
+        return isOffhandSlot(slot) && shouldRemoveOffhandSlot(player);
     }
 
+    /**
+     * Determines whether the given slot is an armor slot, that should be removed
+     * @param player Player
+     * @param slot slot ID
+     * @return Is the given slot an armor slot, that should be removed?
+     */
     public static boolean isAndShouldRemoveArmorSlot(Player player, int slot) {
         return switch (slot) {
             default -> false;
@@ -89,19 +116,24 @@ public class SlotUtils {
         return Inventory.SLOT_OFFHAND == slot;
     }
 
-    public static boolean shouldRemovedOffhandSlot(Player player) {
+    public static boolean shouldRemoveOffhandSlot(Player player) {
         return !PlayerSlots.getOffhandSlot(player);
     }
 
+    /**
+     * Should the player be ignored by the mod
+     * @param player Player
+     * @return Should the player be ignored by the mod
+     */
     public static boolean shouldPlayerBeExcluded(Player player) {
         return player.isSpectator() || (player.isCreative() && ServerConfig.excludeCreativeModePlayers.get());
     }
 
     /**
      * Converts the ids chosen by Mojang (where the non-hotbar inventory is number from top to bottom) to a more logical numbering from bottom to top (which fits better with the hotbar row ids)
-     *
-     * @param slot
-     * @return
+     * @see <a href="https://github.com/Nuparu00/TinyInv/wiki#server-config">Wiki</a>
+     * @param slot Mojang slot ID
+     * @return Normalized ID
      */
     public static int normalizeSlotId(int slot) {
         if(ServerConfig.indexing.get() == Indexing.MOJANG) {
@@ -117,10 +149,9 @@ public class SlotUtils {
     }
 
     /**
-     * Converts TinyInv's slot indexes back into Mojang's indexes
-     *
-     * @param slot
-     * @return
+     * Converts TinyInv's slot indexes back into Mojang's indexes, inverse of {@link #normalizeSlotId(int)}
+     * @param slot Normalized slot ID
+     * @return Mojang ID
      */
     public static int unnormalizeSlotId(int slot) {
         if(ServerConfig.indexing.get() == Indexing.MOJANG) {
@@ -135,6 +166,11 @@ public class SlotUtils {
         return slot;
     }
 
+    /**
+     * Basically, there is this one part of Vanilla code that shifts the IDs for some reason, and it wasn't made with 10+ hotbar slots in mind
+     * @param slot Mojang slot ID
+     * @return Weird Mojang slot ID
+     */
     public static int unnormalizedToMenuId(int slot) {
         if (slot >= 9 && slot < 36) {
             return slot;
@@ -145,9 +181,9 @@ public class SlotUtils {
     /**
      * Puts the "Fake Item" inside the given slot. If there already was a non-fake item, it is dropped
      *
-     * @param player
-     * @param slot
-     * @return
+     * @param player Player
+     * @param slot Slot ID
+     * @return Did we have to put a new "Fake Item" into the slot?
      */
     public static boolean replaceSlotStack(Player player, int slot) {
         if (player.level().isClientSide()) return false;
@@ -162,10 +198,10 @@ public class SlotUtils {
     }
 
     /**
-     * Replaces the slots that should be removed by a fake (non-active) variant
-     *
-     * @param container
-     * @param player
+     * Replaces the slots (the entities in the Container) that should be removed by a fake (non-active) variant,
+     * also replaces the fake slots, that should not be fake by the originals
+     * @param container Container
+     * @param player Player
      */
     public static void fixContainer(AbstractContainerMenu container, Player player) {
         for (int i = 0; i < container.slots.size(); i++) {
@@ -181,24 +217,43 @@ public class SlotUtils {
 
     }
 
-    public static void updateSlotState(Player player, Slot slot, AbstractContainerMenu container, int i, BiFunction<Player, Integer, Boolean> test) {
+    /**
+     * Replaces the slot by a fake (non-active) variant - if it was meant to be removed,
+     * otherwise if it is a fake slot, and therer should not be one, it replaces it by the original
+     * @param player Player
+     * @param slot Slot (the entity in Container)
+     * @param container Container
+     * @param slotPos Position/index of the slot in the container
+     * @param test Function used to test whether there should be a fake slot
+     */
+    public static void updateSlotState(Player player, Slot slot, AbstractContainerMenu container, int slotPos, BiFunction<Player, Integer, Boolean> test) {
         if (slot instanceof FakeSlot fakeSlot) {
             if (!test.apply(player, slot.getSlotIndex())) {
-                container.slots.set(i, fakeSlot.originalSlot);
+                container.slots.set(slotPos, fakeSlot.originalSlot);
             }
         } else if (test.apply(player, slot.getSlotIndex())) {
-            container.slots.set(i, new FakeSlot(slot.container, slot.getSlotIndex(), slot.x, slot.y, player, slot));
+            container.slots.set(slotPos, new FakeSlot(slot.container, slot.getSlotIndex(), slot.x, slot.y, player, slot));
         }
     }
 
-    public static boolean isRemovableSlot(AbstractContainerMenu container, Slot slot, Player player) {
-        return (slot.container == player.getInventory()) || (isCraftingSlot(container, slot, player)) || (isCraftingResultSlot(container, slot, player));
-    }
-
+    /**
+     * Determines whether the slot is a part of the player's inventory (excluding the crafting slots)
+     * @param menu Container
+     * @param slot Slot
+     * @param player Player
+     * @return is the slot a part of the player's inventory
+     */
     public static boolean isInventorySlot(AbstractContainerMenu menu, Slot slot, Player player) {
         return (slot.container == player.getInventory());
     }
 
+    /**
+     * Determines whether the slot one of the player's crafting input slots
+     * @param menu Container
+     * @param slot Slot
+     * @param player Player
+     * @return is the slot one of the player's crafting input slots
+     */
     public static boolean isCraftingSlot(AbstractContainerMenu menu, Slot slot, Player player) {
         if (menu instanceof InventoryMenu inventoryMenu) {
             return slot.container == inventoryMenu.getCraftSlots() && menu == player.inventoryMenu;
@@ -206,6 +261,13 @@ public class SlotUtils {
         return false;
     }
 
+    /**
+     * Determines whether the slot one is the player's crafting result slot
+     * @param menu Container
+     * @param slot Slot
+     * @param player Player
+     * @return is the slot the player's crafting result slot
+     */
     public static boolean isCraftingResultSlot(AbstractContainerMenu menu, Slot slot, Player player) {
         if (menu instanceof InventoryMenu inventoryMenu) {
             return slot.container == inventoryMenu.resultSlots && menu == player.inventoryMenu;
@@ -213,6 +275,10 @@ public class SlotUtils {
         return false;
     }
 
+    /**
+     * Ensures the player's selected slot is a valid (hotbar) one
+     * @param player Player
+     */
     public static void fixSelectedSlot(Player player) {
         int hotbarSlots = PlayerSlots.getHotbarSlots(player);
         if (hotbarSlots == 0) return;
@@ -221,19 +287,25 @@ public class SlotUtils {
         }
     }
 
+    /**
+     * Is the slot player's hotbar slot
+     * @param slot slot
+     * @param player Player
+     * @return Is the slot player's hotbar slot
+     */
     public static boolean isHotbarSlot(int slot, Player player) {
         return slot >= 0 && normalizeSlotId(slot) < PlayerSlots.getHotbarSlots(player);
     }
 
+    /**
+     * Fixes the player's crafting slots (
+     * @param player Player
+     */
     public static void fixCraftingSlots(Player player){
-        //System.out.println();
         for(int i = 1; i < 5; i++){
-            //System.out.println(i + " " + SlotUtils.shouldRemoveSlot(player, i - 1) + " " + (player.inventoryMenu.slots.get(i) instanceof FakeSlot));
-
             if(SlotUtils.shouldRemoveCraftingSlot(player, i - 1) != (player.inventoryMenu.slots.get(i) instanceof FakeSlot)){
                 PlayerEventHandler.schedulePlayerForUpdate((ServerPlayer) player);
             }
         }
-        //System.out.println();
     }
 }

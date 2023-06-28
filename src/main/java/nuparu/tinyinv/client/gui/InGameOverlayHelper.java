@@ -34,7 +34,7 @@ public class InGameOverlayHelper {
 
             int rows = ClientSlotUtils.getHotbarRows(window) - 1;
             int slots = ClientSlotUtils.getHotbarSlots();
-            int slotsPerRow = Math.min(ClientConfig.maxSlotsInHotbarRow.get(), slots);
+            int slotsPerRow = ClientConfig.maxSlotsInHotbarRow.get() == 0 ? slots : Math.min(ClientConfig.maxSlotsInHotbarRow.get(), slots);
 
             Minecraft minecraft = Minecraft.getInstance();
             ItemStack itemstack = player.getOffhandItem();
@@ -52,7 +52,7 @@ public class InGameOverlayHelper {
 
             renderHotbarGraphics(guiGraphics, hotbarStart, hotbarEnd, i, slots, screenHeight, slotsPerRow);
 
-            if (!itemstack.isEmpty() && PlayerSlots.getOffhandSlot(player)) {
+            if (!itemstack.isEmpty() && PlayerSlots.getOffhandSlot(player) && !ClientConfig.hideOffhand.get()) {
                 if (humanoidarm == HumanoidArm.LEFT) {
                     guiGraphics.blit(Textures.WIDGETS_LOCATION, hotbarStart - 29, screenHeight - 23, 24, 22, 29, 24);
                 } else {
@@ -64,7 +64,7 @@ public class InGameOverlayHelper {
 
             int l = renderHotbarItems(guiGraphics, hotbarStart, hotbarEnd, i, slots, screenHeight, slotsPerRow, partialTicks, player);
 
-            if (!itemstack.isEmpty() && PlayerSlots.getOffhandSlot(player)) {
+            if (!itemstack.isEmpty() && PlayerSlots.getOffhandSlot(player) && !ClientConfig.hideOffhand.get()) {
                 int i2 = screenHeight - 16 - 3;
                 if (humanoidarm == HumanoidArm.LEFT) {
                     renderSlot(guiGraphics, hotbarStart - 26, i2, partialTicks, player, itemstack, l++);

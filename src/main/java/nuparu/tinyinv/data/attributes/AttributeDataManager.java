@@ -1,10 +1,10 @@
 package nuparu.tinyinv.data.attributes;
 
 import com.google.gson.*;
-import com.mojang.realmsclient.util.JsonUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -22,6 +22,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
+//Lots of bad stuff
 public class AttributeDataManager extends SimpleJsonResourceReloadListener {
 
     private static final Gson GSON = (new GsonBuilder()).create();
@@ -46,7 +48,7 @@ public class AttributeDataManager extends SimpleJsonResourceReloadListener {
             ResourceLocation key = entry.getKey();
             JsonElement je = entry.getValue();
             JsonObject jo = je.getAsJsonObject();
-            String type = JsonUtils.getStringOr("type", jo, "item");
+            String type = GsonHelper.getAsString(jo, "type", "item");
             if (type.equals("item")) {
                 try {
                     Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(jo.get("item").getAsString()));
@@ -164,6 +166,14 @@ public class AttributeDataManager extends SimpleJsonResourceReloadListener {
         };
     }
 
+    /**
+     * Basically, the way Attribute Modifiers work with Effects is that when you get the effect, it gives you the modifiers,
+     * and when you lose it, it removes them based on their UUIDs. Because of this, the IDs have to pe session persistent
+     * (otherwise the modifiers could get stuck after reloading the world). However, they also have to be dynamically generated.
+     * So hence why there is the hash function, which should do the job fairly reliably.
+     * @param input String
+     * @return UUID
+     */
     public static UUID stringToUUID(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

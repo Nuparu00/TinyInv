@@ -1,13 +1,7 @@
 package nuparu.tinyinv.capabilities;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface IExtendedPlayer {
 
@@ -22,5 +16,10 @@ public interface IExtendedPlayer {
     void tick(Player player);
 
     IExtendedPlayer setGracePeriod(int time);
+
+    /**
+     * It takes a while after joining for the game to recognize attribute modifiers added by armor, this prevents unwanted temporary inventory shrinking
+     * @return The remaining grace period
+     */
     int getGracePeriod();
 }

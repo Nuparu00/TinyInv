@@ -1,10 +1,6 @@
 package nuparu.tinyinv.event;
 
-import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.util.SortedArraySet;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,12 +10,9 @@ import nuparu.tinyinv.capabilities.CapabilityHelper;
 import nuparu.tinyinv.capabilities.IExtendedPlayer;
 import nuparu.tinyinv.network.PacketManager;
 import nuparu.tinyinv.network.packets.FixClientContainerPacket;
-import nuparu.tinyinv.world.entity.player.PlayerSlots;
-import nuparu.tinyinv.world.inventory.FakeSlot;
 import nuparu.tinyinv.world.inventory.SlotUtils;
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 @Mod.EventBusSubscriber(modid = TinyInv.MODID)
 public class TickHandler {
@@ -57,15 +50,6 @@ public class TickHandler {
             for(ServerPlayer player : players){
                 SlotUtils.fixContainer(player.containerMenu, player);
                 PacketManager.sendTo(PacketManager.fixClientContainer,new FixClientContainerPacket(),player);
-                /*
-                Inventory inv = player.getInventory();
-                if (inv.selected >= 9) {
-                    inv.selected = 0;
-                } else {
-                    inv.selected = Mth.clamp(player.getInventory().selected, 0, Utils.getHotbarSlots(player) - 1);
-                }
-
-                player.connection.send(new ClientboundSetCarriedItemPacket(inv.selected));*/
             }
         }
     }

@@ -11,25 +11,16 @@ public class InventoryMixinHelper {
         int hotbarSlots = PlayerSlots.getHotbarSlots(player);
 
         if (hotbarSlots == 0) return;
-
-        //System.out.println("");
         int normalized = SlotUtils.normalizeSlotId(inventory.selected);
-        //System.out.println("SWAP X " + normalized);
 
         for (normalized -= i; normalized < 0; normalized += hotbarSlots) {
         }
-        //System.out.println("SWAP Y " + normalized);
-        //System.out.println("SWAP Z " + hotbarSlots);
 
         while (normalized >= hotbarSlots) {
             normalized -= hotbarSlots;
         }
-        //System.out.println("SWAP A " + normalized);
-        //System.out.println("SWAP B " + SlotUtils.unnormalizeSlotId(normalized));
 
         inventory.selected = SlotUtils.unnormalizeSlotId(normalized);
-        //System.out.println("SWAP " + inventory.selected);
-        //System.out.println("");
     }
     public static int getSuitableHotbarSlot(Inventory inventory){
 
@@ -71,7 +62,6 @@ public class InventoryMixinHelper {
                         self.items.set(j, self.items.get(self.selected));
                     }
                 }
-                System.out.println("CLI " + self.player.level().isClientSide());
                 self.items.set(self.selected, p_36013_);
             } else {
                 self.pickSlot(i);

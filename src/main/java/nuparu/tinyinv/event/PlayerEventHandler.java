@@ -9,11 +9,11 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import nuparu.tinyinv.capabilities.CapabilityHelper;
+import nuparu.tinyinv.capabilities.IExtendedPlayer;
 import nuparu.tinyinv.world.inventory.SlotUtils;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 
 @Mod.EventBusSubscriber
 public class PlayerEventHandler {
@@ -30,8 +30,9 @@ public class PlayerEventHandler {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-        CapabilityHelper.getExtendedPlayer(player).setGracePeriod(40);
-        //SlotUtils.fixContainer(player.containerMenu,player);
+        IExtendedPlayer iep = CapabilityHelper.getExtendedPlayer(player);
+        if(iep == null) return;
+        iep.setGracePeriod(40);
     }
 
     @SubscribeEvent
@@ -42,9 +43,6 @@ public class PlayerEventHandler {
     }
 
     public static void schedulePlayerForUpdate(ServerPlayer player){
-        /*for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-            System.out.println(ste);
-        }*/
         playersToUpdate.add(player);
     }
 }

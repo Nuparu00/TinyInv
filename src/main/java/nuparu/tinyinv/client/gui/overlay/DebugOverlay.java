@@ -1,15 +1,11 @@
 package nuparu.tinyinv.client.gui.overlay;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import nuparu.tinyinv.capabilities.CapabilityHelper;
-import nuparu.tinyinv.capabilities.IExtendedPlayer;
 import nuparu.tinyinv.world.entity.player.PlayerSlots;
 
 public class DebugOverlay extends Gui implements IGuiOverlay {

@@ -18,7 +18,6 @@ public class ServerConfig {
     public static BooleanValue craftingTRSlot;
     public static BooleanValue craftingBLSlot;
     public static BooleanValue craftingBRSlot;
-    public static BooleanValue countSlotsFromStart;
     public static BooleanValue excludeCreativeModePlayers;
     public static ForgeConfigSpec.EnumValue<Indexing> indexing;
 
@@ -37,7 +36,6 @@ public class ServerConfig {
         craftingBLSlot = server.comment("Should offhand slot be enabled?").define("general.crafting_bottom_left_slot", true);
         craftingBRSlot = server.comment("Should offhand slot be enabled?").define("general.crafting_bottom_right_slot", true);
 
-        countSlotsFromStart = server.comment("Counts slots by their numerical IDs - hotbar has IDs 0-8, the top inventory row 9-17,....").define("general.count_slots_from_start", false);
         excludeCreativeModePlayers = server.comment("Should exclude the players who are in creative mode?").define("general.exclude_creative_mode_players", true);
         indexing = server.comment("What indexing to use? Mojang counts inventory slots from top to bottom, while TinyInv counts from bottom to top (which lines up better with hotbar indexes)").defineEnum("general.indexing",Indexing.TINYINV,Indexing.values());
 

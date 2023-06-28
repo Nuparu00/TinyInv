@@ -6,6 +6,9 @@ import nuparu.tinyinv.config.ServerConfig;
 import nuparu.tinyinv.init.ModAttributes;
 import nuparu.tinyinv.world.inventory.SlotUtils;
 
+/**
+ * Should be the only way to get information about the slots the player has
+ */
 public class PlayerSlots {
     public static int getSlots(Player player){
         if (SlotUtils.shouldPlayerBeExcluded(player)) return Inventory.INVENTORY_SIZE;

@@ -51,4 +51,8 @@ public class MixinAbstractContainerScreen {
             ci.cancel();
         }
     }
+    /*@Inject(at = @At("RETURN"), method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;)V")
+    public void renderSlotAfter(GuiGraphics guiGraphics, Slot slot, CallbackInfo ci) {
+        RenderUtils.slotDebug(((AbstractContainerScreen<?>) (Object) this), guiGraphics, slot);
+    }*/
 }
