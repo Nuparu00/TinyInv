@@ -25,10 +25,17 @@ public class CapabilityEventHandler {
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player player = event.getOriginal();
+        Player player = event.getEntity();
+        Player original = event.getOriginal();
+
+        if(player == null || original == null)
+            return;
 
         IExtendedPlayer extendedPlayer = CapabilityHelper.getExtendedPlayer(player);
         IExtendedPlayer oldExtendedPlayer = CapabilityHelper.getExtendedPlayer(event.getOriginal());
+
+        if(extendedPlayer == null || oldExtendedPlayer == null)
+            return;
 
         if (!event.isWasDeath()) {
             extendedPlayer.copy(oldExtendedPlayer);
