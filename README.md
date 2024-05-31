@@ -8,6 +8,8 @@
 
 [![Discord](https://img.shields.io/discord/765992108602687558.svg?style=for-the-badge)](https://discord.gg/sJQWn8p)
 
+> [!WARNING]  
+> This branch is here only due to a request. Aside from the fact that the 1.12.2 version itself is very limited compared to the later versions, there are no guarantees that the code in here is in fact the 1.3 version of the mod! This is just the most up-to-date 1.12.2 source, that survived the several drive wipes since the release of the 1.12.2 versions. Feel free to decompile the 1.3 .jar file to verify, whether the code matches.
 
 TinyInv is a Minecraft mod, that allows you to manipulate the available inventory and hotbar slots on a per-player basis. This includes:
 * decreasing the number of inventory slots
